@@ -1,15 +1,14 @@
 {
-    "name": "sycofinder",
-    "author": "Leopold Talirz, Seyed Mohamad Moosavi",
+    "name": "aiida-importer",
+    "author": "Leopold Talirz",
     "author_email": "leopold.talirz@gmail.com",
-    "description": "Web App for finding and optimizing synthesis conditions for nanoporous materials.",
-    "url": "https://github.com/ltalirz/https://github.com/ltalirz/sycofinder",
+    "description": "Upload and import AiiDA databases.",
+    "url": "https://github.com/ltalirz/aiida-importer",
     "license": "MIT",
     "classifiers": [
         "Programming Language :: Python"
     ],
-    "version": "0.1.1",
-    "setup_requires": ["numpy"],
+    "version": "0.1.0",
     "install_requires": [
         "future",
         "dash",
@@ -17,12 +16,7 @@
         "dash-core-components",
         "dash-html-components",
         "dash-table-experiments",
-        "plotly",
-        "numpy",
-        "scipy",
-        "pandas",
-        "deap",
-        "sklearn"
+        "plotly"
     ],
     "extras_require": {
         "pre-commit": [

@@ -6,17 +6,22 @@ from dash.dependencies import Input, Output  #, State
 import dash_core_components as dcc
 import dash_html_components as html
 from . import app
+from .common import HIDE  # , SHOW
 
 import tempfile
 import os
-import sys
 import traceback
 import base64
 
+max_size_mb = 10
+max_size = max_size_mb * 1000000
+
 layout = html.Div(
     [
+        html.Div("Upload your AiiDA export file (size limit: {} MB)".format(
+            max_size_mb)),
         dcc.Upload(
-            id='ga_upload',
+            id='upload_component',
             children=html.Div(['Drag and Drop or ',
                                html.A('Select Files')]),
             style={
@@ -29,9 +34,10 @@ layout = html.Div(
                 'textAlign': 'center',
                 'margin': '10px'
             },
-            multiple=False),
-        #html.Div(id='ga_parsed_data', style=HIDE),
-        html.Div(id='ga_parsed_data'),
+            multiple=False,
+            max_size=max_size),
+        html.Div(id='upload_info'),
+        html.Div(id='upload_success', style=HIDE),
         #html.Div(
         #    [
         #        html.Button('compute', id='ga_btn_compute'),
@@ -45,18 +51,35 @@ layout = html.Div(
 )
 
 
+# TODO: For some reason unkown to me, this callback is
+# *not* fired upon file upload.
+# I believe this is a bug, and should be reported to the
+# plotly forum with a MWE (2 callbacks depending on file upload)
 @app.callback(
-    Output('ga_parsed_data', 'children'), [
-        Input('ga_upload', 'contents'),
-        Input('ga_upload', 'filename'),
-        Input('ga_upload', 'last_modified')
+    Output('upload_info', 'children'), [
+        Input('upload_component', 'contents'),
+        Input('upload_component', 'filename'),
+        Input('upload_component', 'last_modified'),
+        Input('upload_success', 'children'),
+    ])
+def monitor_upload(contents, filename, date, success):  # pylint: disable=unused-argument
+    if not filename:
+        return ""
+
+    if not success:
+        return "Uploading {}, please wait.".format(filename)
+    return success
+
+
+@app.callback(
+    Output('upload_success', 'children'), [
+        Input('upload_component', 'contents'),
+        Input('upload_component', 'filename'),
+        Input('upload_component', 'last_modified')
     ])
 def parse_data(content, name, date):  # pylint: disable=unused-argument
     if content is None:
         return ''
-
-    if sys.getsizeof(content) < 10000000:
-        return 'File too large - size limit 10 MB.'
 
     content_type, content_string = content.split(',')  # pylint: disable=unused-variable
     decoded = base64.b64decode(content_string)
@@ -89,7 +112,7 @@ def parse_data(content, name, date):  # pylint: disable=unused-argument
 
 
 #@app.callback(
-#    Output('div_compute', 'style'), [Input('ga_parsed_data', 'children')])
+#    Output('div_compute', 'style'), [Input('upload_info', 'children')])
 #def show_button(json):
 #    if json is None:
 #        return HIDE
@@ -98,7 +121,7 @@ def parse_data(content, name, date):  # pylint: disable=unused-argument
 #@app.callback(
 #    Output('ga_compute_info',
 #           'children'), [Input('ga_btn_compute', 'n_clicks')],
-#    [State('ga_parsed_data', 'children')])
+#    [State('upload_info', 'children')])
 ## pylint: disable=unused-argument, unused-variable
 #def on_compute(n_clicks, json):
 #    if json is None:

@@ -36,8 +36,10 @@ layout = html.Div(
             },
             multiple=False,
             max_size=max_size),
-        html.Div(id='upload_info'),
+        html.Div(html.B(id='upload_info')),
         html.Div(id='upload_success', style=HIDE),
+        html.A('Back to overview', href='/')
+
         #html.Div(
         #    [
         #        html.Button('compute', id='ga_btn_compute'),

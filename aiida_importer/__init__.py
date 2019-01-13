@@ -30,7 +30,7 @@ app.config.suppress_callback_exceptions = True
 app.scripts.config.serve_locally = True
 app.css.config.serve_locally = True
 
-title = 'AiiDA DB uploader'
+title = 'AiiDA Database Uploader'
 
 app.title = title
 app.layout = html.Div([

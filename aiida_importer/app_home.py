@@ -1,10 +1,10 @@
 import dash_html_components as html
 from . import app
+from .common import bokeh_url
 
 about = """
-Upload your AiiDA database.
+Upload your AiiDA database and compare it to existing data using automated plots.
 """
-
 about_html = [html.P(i) for i in about.split("\n\n")]
 
 layout = [
@@ -16,8 +16,12 @@ layout = [
             html.H2("Steps"),
             html.Div(
                 html.Ol([
-                    html.Li(html.A('Upload AiiDA datbase', href='upload/')),
-                    html.Li(html.A('Look at plot', href='ml/')),
+                    html.Li(html.A('Upload AiiDA database', href='upload/')),
+                    html.Li(
+                        html.A(
+                            'Plot performance of all MOFs',
+                            href=bokeh_url + '/figure',
+                            target="_blank")),
                 ]),
                 className="sycolinks"),
         ],

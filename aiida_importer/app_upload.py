@@ -20,6 +20,11 @@ layout = html.Div(
     [
         html.Div("Upload your AiiDA export file (size limit: {} MB)".format(
             max_size_mb)),
+        html.Div([
+            "After uploading, ",
+            html.B("please wait 10s"),
+            " until you get the \'Sucess\' message. If the upload fails, contact a tutor."
+        ]),
         dcc.Upload(
             id='upload_component',
             children=html.Div(['Drag and Drop or ',
@@ -104,7 +109,7 @@ def parse_data(content, name, date):  # pylint: disable=unused-argument
                 name)
             msg += traceback.format_exc()
         else:
-            msg = 'imported archive {}'.format(name)
+            msg = 'Success: imported archive {}'.format(name)
 
     finally:
         os.remove(path)
